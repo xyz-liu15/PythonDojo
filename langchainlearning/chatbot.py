@@ -7,7 +7,7 @@ from langchain_core.output_parsers import StrOutputParser
 
 model = ChatDeepSeek(
                     model="deepseek-chat",
-                    api_key="sk-f8637d93d6194c4588a7bb84cf6d1caf"
+                    api_key=""
 )
 
 prompts = ChatPromptTemplate([
