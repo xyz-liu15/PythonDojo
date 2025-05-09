@@ -1,0 +1,10 @@
+[project]
+name = "pythondojo"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "langchain>=0.3.25",
+    "langchain-deepseek>=0.1.3",
+]
