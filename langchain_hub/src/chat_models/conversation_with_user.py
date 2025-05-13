@@ -1,8 +1,12 @@
-"""为聊天机器人添加历史记录"""
+"""
+为聊天机器人添加历史记录
+总体思路为：
+创建一个列表用来存储历史聊天记录。
+将每一次对话都添加到列表中，但这样随着聊天次数的增加，会增加Tokens消耗。
+"""
 from langchain_core.messages import HumanMessage,AIMessage,SystemMessage
-import os
-
 from langchain_openai import ChatOpenAI
+import os
 
 model = ChatOpenAI(
     model = "Pro/deepseek-ai/DeepSeek-V3",
