@@ -1,6 +1,5 @@
 """
-将大模型输出的英文内容翻译为中文，以顺序链接。
-需要两个提示词，一个英文版的提示词。一个翻译英文输出内容的提示词。
+将大模型输出的小说进行多角度解构。
 """
 import os
 from langchain.prompts import ChatPromptTemplate
