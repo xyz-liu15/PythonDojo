@@ -5,7 +5,8 @@
 import os
 from langchain.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
-from langchain_core.runnables import RunnableLambda,RunnableSequence
+from langchain_core.runnables import RunnableLambda
+from langchain_core.output_parsers import StrOutputParser
 
 
 model = ChatOpenAI(
@@ -15,27 +16,23 @@ model = ChatOpenAI(
     temperature = 0.7
 )
 
-template = "请你使用{language}为我讲一个简短的科幻故事，不超过200字。"
-
-English_prompt = ChatPromptTemplate.from_template(template)
-
-
-translate_prompt = ChatPromptTemplate.from_messages({
-    ("system","你是一个顶级科幻故事翻译大师，可以生动形象的将英文翻译为中文。")
-    ("user","请翻译以下内容：{text}")
+human_template_prompt = ChatPromptTemplate.from_messages({
+    ("system","你是一个顶级科幻小说创作大师，非常擅长使用生动形象的文字来组织语言。尤其是关于{topic}。"),
+    ("user","请帮我创作一个关于{topic}的不超过200字的科幻短篇故事。")
 })
 
+novel_analyze_prompt = ChatPromptTemplate.from_template("采用人格分裂讨论模式（文学评论家，读者，创作者等人格）对{text}进行解构。")
 
-text_input = RunnableLambda(lambda x : English_prompt.format_messages(**x))
-invoke_model = RunnableLambda(lambda x : model.invoke(x))
-parser_output = RunnableLambda(lambda x : x.content)
 
-translate_text = RunnableLambda(lambda x : translate_prompt.format_messages(**x))
-translate_invoke_model = RunnableLambda(lambda x : model.invoke(x))
-translate_parser_output = RunnableLambda(lambda x : x.content)
+prepared_for_analyze = RunnableLambda(lambda x : {"text" : x})
 
-chain = text_input | invoke_model | parser_output | translate_invoke_model | translate_text | translate_invoke_model | translate_parser_output
 
-response = chain.invoke({
-    "language" : "English"
-})
+chain = (
+        human_template_prompt | model | StrOutputParser() | 
+         prepared_for_analyze | novel_analyze_prompt | 
+         model | StrOutputParser()
+)
+
+
+response = chain.invoke({"topic" : "当地球上只剩下了一个人，这时，他的房门却被敲响了。"})
+print(response)
