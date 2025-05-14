@@ -1,30 +1,50 @@
+"""
+使用提示词模板
+"""
+import os
 from langchain_openai import ChatOpenAI
-from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate
 
-load_dotenv()
 
-llm = ChatOpenAI(model="Pro/deepseek-ai/DeepSeek-V3", base_url="https://www.dmxapi.com/v1", api_key=os.getenv("DMX_API_KEY"))  # 使用指定的模型和 API 密钥初始化聊天模型
+model = ChatOpenAI(
+    model = "Pro/deepseek-ai/DeepSeek-V3",
+    base_url = "https://www.dmxapi.com/v1",
+    api_key = os.getenv("DMX_API_KEY"),
+    temperature = 0.7
+)
 
 
-# template = "Write a {tone} email to {company} expressing interest in the {position} position, mentioning {skill} as a key strength. Keep it to 4 lines max"
+# # 例子一
+# # 创建一个模板
+# template = "请你帮我写一份辞职申请，内容包括{reason}，{date}。"
 
+# # 创建一个提示词模板
 # prompt_template = ChatPromptTemplate.from_template(template)
 
-# prompt =  prompt_template.invoke({
-#     "tone": "energetic", 
-#     "company": "samsung", 
-#     "position": "AI Engineer", 
-#     "skill": "AI"
+# # 构建提示词
+# prompt = prompt_template.invoke({
+#     "reason" : "世界这么大，我想去看看。",
+#     "date" : "2025年5月14日"
 # })
 
-# Example 2: Prompt with System and Human Messages (Using Tuples)
+
+# response = model.invoke(prompt)
+
+# print(response.content)
+
+# 例子二
+# 在元组中使用system消息和human消息
 messages = [
-    ("system", "You are a comedian who tells jokes about {topic}."),
-    ("human", "Tell me {joke_count} jokes."),
+    ("system" , "你是一个喜剧大师，可以给我讲关于{topic}的笑话。"),
+    ("user" , "给我讲{number}个笑话。")
 ]
 
 prompt_template = ChatPromptTemplate.from_messages(messages)
-prompt = prompt_template.invoke({"topic": "lawyers", "joke_count": 3})
-result = llm.invoke(prompt)
-print(result)
+
+prompt = prompt_template.invoke({
+    "topic" : "猫",
+    "number" : "3"
+})
+
+response = model.invoke(prompt)
+print(response.content)
