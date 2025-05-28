@@ -12,6 +12,7 @@ dependencies = [
     "langchain-google-firestore>=0.5.0",
     "langchain-google-genai>=2.1.4",
     "langgraph>=0.4.3",
+    "numpy>=2.2.5",
     "pyecharts>=2.0.8",
     "python-dotenv>=1.1.0",
 ]
@@ -20,3 +21,7 @@ dependencies = [
 dev = [
     "ipykernel>=6.29.5",
 ]
+
+[[tool.uv.index]]
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+default = true
